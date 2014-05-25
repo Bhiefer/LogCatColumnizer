@@ -7,11 +7,9 @@ using System.Globalization;
 namespace Columnizer
 {
   /// <summary>
-  /// The WebsphereColumnizer splits the log line into 2 fields (timestamp, message).
-  /// It can parse timestamps of the format M/d/yy H:m:s:fff. This means there may be 1 or 2 digits
-  /// for hour, minute, second, day or month.
+  /// The LogCat Columnizer parses Android logs
   /// </summary>
-  public class WebsphereColumnizer : ILogLineColumnizer
+  public class LogCatColumnizer : ILogLineColumnizer
   {
     protected int timeOffset = 0;
     protected CultureInfo cultureInfo = new CultureInfo("en-US");
