@@ -119,8 +119,18 @@ namespace Columnizer
     /// <param name="line">The line content to be splitted</param>
     public string[] SplitLine(ILogLineColumnizerCallback callback, string line)
     {
+        
+
       string[] cols = new string[7] { "", "", "", "", "", "", ""};
+
+ /*     if (line.Length < 20)
+      {
+          cols[5] = "KRATKE";
+          return null;
+      }*/
+
       int start = 0, end = 0;
+      int levelOffset = 0;
 
       // If the line is too short (i.e. does not follow the format for this columnizer) return the whole line content
       // in colum 1 (the log message column). Timestamp column will be left blank.
@@ -132,22 +142,47 @@ namespace Columnizer
       }
       else
       {
+          //timestamp
           cols[0] = line.Substring(0, 18);
           lastTime = cols[0];
-          cols[1] = line.Substring(20, 1);
+
+          // level
+          if (line.Substring(18, 1).Equals(":"))
+          {
+              // eclipse output
+              // 11-23 11:52:44.962: D/
+              cols[1] = line.Substring(20, 1);
+              levelOffset = 22;
+          }
+          else
+          {
+              // logcat -v time
+              // 11-23 11:52:44.962 D/
+              cols[1] = line.Substring(19, 1);
+              levelOffset = 21;
+          }
           lastLevel = cols[1];
 
-          end = line.IndexOf('(', 22);
-          start = line.LastIndexOf('.', end, end - 22) + 1;
+          end = line.IndexOf('(', levelOffset);
+
+          // skip packages in class name: 
+          // com.company.app.FooClass
+          //                 ^
+          start = line.LastIndexOf('.', end, end - levelOffset) + 1;
           if (start == 0)
           {
-              start = 22;
+              start = levelOffset;
           }
+
+          // class
           cols[2] = line.Substring(start, end - start);
           lastClass = cols[2];
+
           start = end + 1;
           end = line.IndexOf(')', start);
-          cols[6] = line.Substring(start, end - start);
+
+          // TID
+          cols[6] = line.Substring(start, end - start).Trim();
           start = end + 3;
       }
 
