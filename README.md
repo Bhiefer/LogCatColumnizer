@@ -22,7 +22,7 @@ Currently only 'time' format of logcat output is supported.
 It is also capable to parse our specific logs that includes method name and line. It has to be in following format:
 
 ```
-12-31 17:26:46.268: &lt;level&gt;/&lt;class tag&gt;(&lt;TID&gt;): &lt;log message&gt;[&lt;method&gt;():&lt;line&gt;]
+12-31 17:26:46.268: <level>/<class tag>(<TID>): <log message>[<method>():<line>]
 ```
 
 Example:
